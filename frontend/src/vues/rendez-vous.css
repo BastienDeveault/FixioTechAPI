@@ -1,0 +1,386 @@
+.rendez-vous-container {
+  min-height: calc(100vh - 80px);
+  background-color: #f5f6fa;
+  padding: 2rem 1rem;
+}
+
+.rendez-vous-header {
+  text-align: center;
+  margin-bottom: 2.5rem;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.rendez-vous-header h1 {
+  color: #2c3e50;
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.rendez-vous-intro {
+  color: #7f8c8d;
+  font-size: 1.1rem;
+  line-height: 1.6;
+}
+
+.rendez-vous-content {
+  display: grid;
+  grid-template-columns: 1fr 1.5fr;
+  gap: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* Section des techniciens */
+.techniciens-section {
+  background-color: white;
+  padding: 1.5rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  height: fit-content;
+}
+
+.techniciens-section h2 {
+  color: #2c3e50;
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 2px solid #3498db;
+  padding-bottom: 0.5rem;
+}
+
+.techniciens-liste {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.technicien-card {
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+  border: 2px solid #dcdde1;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background-color: #fafafa;
+  position: relative;
+}
+
+.technicien-card:hover {
+  border-color: #3498db;
+  background-color: #ecf5fc;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(52, 152, 219, 0.2);
+}
+
+.technicien-card.technicien-selected {
+  border-color: #3498db;
+  background-color: #e3f2fd;
+  box-shadow: 0 4px 10px rgba(52, 152, 219, 0.3);
+}
+
+.technicien-avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #3498db, #2980b9);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-right: 1rem;
+  flex-shrink: 0;
+}
+
+.technicien-info {
+  flex: 1;
+}
+
+.technicien-info h3 {
+  color: #2c3e50;
+  font-size: 1.1rem;
+  margin-bottom: 0.25rem;
+}
+
+.technicien-info p {
+  color: #7f8c8d;
+  font-size: 0.9rem;
+}
+
+.technicien-check {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 30px;
+  height: 30px;
+  background-color: #2ecc71;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  font-weight: bold;
+  animation: checkPop 0.3s ease;
+}
+
+@keyframes checkPop {
+  0% {
+    transform: scale(0);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Section du formulaire */
+.formulaire-section {
+  background-color: white;
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.formulaire-section h2 {
+  color: #2c3e50;
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 2px solid #3498db;
+  padding-bottom: 0.5rem;
+}
+
+.rendez-vous-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.form-groupe {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-groupe label {
+  color: #2c3e50;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+  font-size: 0.95rem;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+.form-input,
+.form-select,
+.form-textarea {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #dcdde1;
+  border-radius: 4px;
+  font-size: 1rem;
+  font-family: inherit;
+  transition: all 0.3s ease;
+  background-color: white;
+  color: #2c3e50;
+}
+
+.form-input:-webkit-autofill,
+.form-input:-webkit-autofill:hover,
+.form-input:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0px 1000px white inset;
+  -webkit-text-fill-color: #2c3e50;
+  box-shadow: 0 0 0px 1000px white inset;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+.form-input[type="date"] {
+  cursor: pointer;
+  position: relative;
+}
+
+.form-input[type="date"]::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  opacity: 1;
+}
+
+.form-input:focus,
+.form-select:focus,
+.form-textarea:focus {
+  outline: none;
+  border-color: #3498db;
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+}
+
+.form-select {
+  cursor: pointer;
+  background-color: white;
+  color: #2c3e50;
+}
+
+.form-select option {
+  color: #2c3e50;
+}
+
+.form-textarea {
+  resize: vertical;
+  min-height: 120px;
+  background-color: white;
+  color: #2c3e50;
+}
+
+.form-textarea::placeholder {
+  color: #7f8c8d;
+}
+
+.bouton-soumettre {
+  padding: 1rem;
+  background: linear-gradient(135deg, #3498db, #2980b9);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 1.1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 0.5rem;
+}
+
+.bouton-soumettre:hover:not(:disabled) {
+  background: linear-gradient(135deg, #2980b9, #21618c);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(52, 152, 219, 0.4);
+}
+
+.bouton-soumettre:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.error-message {
+  background-color: #ff6b6b;
+  color: white;
+  padding: 1rem;
+  border-radius: 4px;
+  text-align: center;
+  animation: slideDown 0.3s ease;
+}
+
+.success-message {
+  background-color: #2ecc71;
+  color: white;
+  padding: 1rem;
+  border-radius: 4px;
+  text-align: center;
+  animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.form-note {
+  color: #7f8c8d;
+  font-size: 0.9rem;
+  margin-top: 1rem;
+  text-align: center;
+  font-style: italic;
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+  .rendez-vous-content {
+    grid-template-columns: 1fr;
+  }
+
+  .techniciens-section {
+    order: 1;
+  }
+
+  .formulaire-section {
+    order: 2;
+  }
+
+  .techniciens-liste {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .rendez-vous-header h1 {
+    font-size: 2rem;
+  }
+
+  .rendez-vous-intro {
+    font-size: 1rem;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .techniciens-liste {
+    grid-template-columns: 1fr;
+  }
+
+  .rendez-vous-container {
+    padding: 1rem 0.5rem;
+  }
+
+  .formulaire-section,
+  .techniciens-section {
+    padding: 1.5rem 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .rendez-vous-header h1 {
+    font-size: 1.5rem;
+  }
+
+  .technicien-card {
+    padding: 0.75rem;
+  }
+
+  .technicien-avatar {
+    width: 40px;
+    height: 40px;
+    font-size: 1.2rem;
+  }
+
+  .technicien-info h3 {
+    font-size: 1rem;
+  }
+
+  .bouton-soumettre {
+    font-size: 1rem;
+    padding: 0.875rem;
+  }
+}
+
+.no-tech {
+  padding: 12px;
+  background: #fff3cd;
+  border: 1px solid #ffeeba;
+  color: black;
+  border-radius: 6px;
+  text-align: center;
+  font-weight: 500;
+}

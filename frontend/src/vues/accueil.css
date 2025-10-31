@@ -1,0 +1,85 @@
+.accueil-container {
+  padding: 2rem;
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.hero-section {
+  text-align: center;
+  padding: 4rem 2rem;
+  background: linear-gradient(135deg, #2c3e50, #3498db);
+  border-radius: 10px;
+  color: white;
+  margin-bottom: 3rem;
+}
+
+.hero-section h1 {
+  font-size: 3rem;
+  margin-bottom: 1.5rem;
+}
+
+.hero-text {
+  font-size: 1.2rem;
+  max-width: 800px;
+  margin: 0 auto 2rem;
+  line-height: 1.6;
+}
+
+.cta-boutons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.cta-bouton-rendez-vous, .cta-bouton-services {
+  padding: 1rem 2rem;
+  border-radius: 5px;
+  text-decoration: none;
+  font-weight: bold;
+  transition: transform 0.2s;
+}
+
+.cta-boutons:hover {
+  transform: translateY(-2px);
+}
+
+.cta-bouton-rendez-vous {
+  background-color: #e74c3c;
+  color: white;
+}
+
+.cta-bouton-services {
+  background-color: transparent;
+  border: 2px solid white;
+  color: white;
+}
+
+.features-section {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+  margin-top: 3rem;
+}
+
+.feature {
+  text-align: center;
+  padding: 2rem;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.feature h3 {
+  color: #2c3e50;
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+}
+
+.feature p {
+  color: #7f8c8d;
+  line-height: 1.5;
+}
