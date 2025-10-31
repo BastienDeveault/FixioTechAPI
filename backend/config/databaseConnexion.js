@@ -2,7 +2,7 @@ import mysql from "mysql2/promise";
 
 const isProd = process.env.NODE_ENV === "production";
 
-export const pool = mysql.createPool({
+export const db = mysql.createPool({
   host: process.env.DB_HOST,
   port: Number(process.env.DB_PORT ?? 3306),
   user: process.env.DB_USER,
@@ -26,6 +26,6 @@ export const pool = mysql.createPool({
 });
 
 export async function assertDb() {
-  const [rows] = await pool.query("SELECT 1");
+  const [rows] = await db.query("SELECT 1");
   return rows;
 }
