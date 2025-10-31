@@ -46,8 +46,15 @@ app.get("/health", async (_req, res) => {
 app.use("/api/utilisateurs", routerUtilisateur);
 app.use("/api/horaires", routerHoraire);
 app.use("/api/rendezVous", routerRendezVous);
-app.use("/api/test", (_req, res) => {
-  res.json({ ok: true });
+app.get("/api/dbping", async (_req, res, next) => {
+  const t0 = Date.now();
+  try {
+    const [rows] = await pool.query({ sql: "SELECT 1", timeout: 2000 });
+    return res.json({ ok: true, ms: Date.now() - t0, rows });
+  } catch (err) {
+    console.error("[dbping] error:", err, { ms: Date.now() - t0 });
+    return next(err);
+  }
 });
 
 app.use(errorHandler);
