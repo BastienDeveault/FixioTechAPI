@@ -18,17 +18,17 @@ const app = express();
 //   process.env.FRONTEND_ORIGIN, // ex: https://ton-frontend.onrender.com
 // ]);
 
-app.use(
-  cors({
-    origin: (origin, cb) => {
-      if (!origin) return cb(null, true); // outils CLI, Postman
-      if (allowList.has(origin) || origin.endsWith(".onrender.com"))
-        return cb(null, true);
-      return cb(new Error("Not allowed by CORS"));
-    },
-    credentials: true,
-  })
-);
+// app.use(
+//   cors({
+//     origin: (origin, cb) => {
+//       if (!origin) return cb(null, true); // outils CLI, Postman
+//       if (allowList.has(origin) || origin.endsWith(".onrender.com"))
+//         return cb(null, true);
+//       return cb(new Error("Not allowed by CORS"));
+//     },
+//     credentials: true,
+//   })
+// );
 
 // ---- Middlewares / routes ----
 app.use(express.json());
