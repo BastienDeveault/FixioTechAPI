@@ -37,7 +37,8 @@ app.get("/health", async (_req, res) => {
   try {
     await assertDb();
     res.status(200).send("OK");
-  } catch {
+  } catch (err) {
+    console.error("DB healthcheck error:", err);
     res.status(500).send("DB DOWN");
   }
 });
