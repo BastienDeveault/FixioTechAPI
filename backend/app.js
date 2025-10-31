@@ -46,6 +46,9 @@ app.get("/health", async (_req, res) => {
 app.use("/api/utilisateurs", routerUtilisateur);
 app.use("/api/horaires", routerHoraire);
 app.use("/api/rendezVous", routerRendezVous);
+app.use("/api/test", (_req, res) => {
+  res.json({ ok: true });
+});
 
 app.use(errorHandler);
 
