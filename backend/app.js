@@ -49,7 +49,7 @@ app.use("/api/rendezVous", routerRendezVous);
 app.get("/api/dbping", async (_req, res, next) => {
   const t0 = Date.now();
   try {
-    const [rows] = await pool.query({ sql: "SELECT 1", timeout: 2000 });
+    const [rows] = await db.query({ sql: "SELECT 1", timeout: 2000 });
     return res.json({ ok: true, ms: Date.now() - t0, rows });
   } catch (err) {
     console.error("[dbping] error:", err, { ms: Date.now() - t0 });
