@@ -8,7 +8,7 @@ const mysqlCa = process.env.MYSQL_CA_B64
   ? Buffer.from(process.env.MYSQL_CA_B64, "base64").toString("ascii")
   : undefined;
 
-export const pool = mysql.createPool({
+export const db = mysql.createPool({
   host: process.env.DB_HOST,
   port: Number(process.env.DB_PORT ?? 3306),
   user: process.env.DB_USER,
