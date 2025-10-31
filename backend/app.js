@@ -13,10 +13,10 @@ dotenv.config();
 const app = express();
 
 // ---- CORS ----
-const allowList = new Set([
-  "http://localhost:5173",
-  process.env.FRONTEND_ORIGIN, // ex: https://ton-frontend.onrender.com
-]);
+// const allowList = new Set([
+//   "http://localhost:5173",
+//   process.env.FRONTEND_ORIGIN, // ex: https://ton-frontend.onrender.com
+// ]);
 
 app.use(
   cors({
