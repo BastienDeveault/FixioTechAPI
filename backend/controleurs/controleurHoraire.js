@@ -1,4 +1,4 @@
-import db from "../config/databaseConnexion.js";
+import { db } from "../config/databaseConnexion.js";
 
 const getHoraires = async (req, res, next) => {
   db.query("SELECT * FROM horaires", (err, results) => {

@@ -1,18 +1,23 @@
-import mysql from "mysql2"
+import mysql from "mysql2/promise";
 
-const db = mysql.createConnection({
-    host: "localhost",
-    user: "fixio",
-    password: "fixio123!?$",
-    database: "fixiotech"
+const ssl =
+  process.env.DB_SSL === "true"
+    ? { rejectUnauthorized: true, minVersion: "TLSv1.2" }
+    : undefined;
+
+export const db = mysql.createPool({
+  host: process.env.DB_HOST || "127.0.0.1",
+  port: Number(process.env.DB_PORT || 3306),
+  user: process.env.DB_USER || "root",
+  password: process.env.DB_PASSWORD || "",
+  database: process.env.DB_NAME || "",
+  ssl,
+  waitForConnections: true,
+  connectionLimit: 10,
+  queueLimit: 0,
 });
 
-db.connect((err) => {
-    if (err) {
-        console.error('Erreur de connexion à la base de données :', err);
-    } else {
-        console.log('Connecté à la base de données MySQL.');
-    }
-});
-
-export default db;
+export async function assertDb() {
+  const [rows] = await db.query("SELECT 1 AS ok");
+  return rows[0]?.ok === 1;
+}

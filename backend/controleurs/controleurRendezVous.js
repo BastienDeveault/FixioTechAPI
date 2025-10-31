@@ -1,4 +1,4 @@
-import db from "../config/databaseConnexion.js";
+import { db } from "../config/databaseConnexion.js";
 
 const getRendezVous = (req, res, next) => {
   const { client_id, employe_id } = req.query;

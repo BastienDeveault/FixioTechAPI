@@ -1,4 +1,4 @@
-import db from "../config/databaseConnexion.js";
+import { db } from "../config/databaseConnexion.js";
 
 const getUtilisateurs = (req, res, next) => {
   const { role } = req.query; // ex: employe, client, admin
