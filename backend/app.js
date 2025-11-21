@@ -2,7 +2,7 @@ import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 
-import { assertDb } from "./config/databaseConnexion.js";
+import { assertDb, db } from "./config/databaseConnexion.js";
 import routerUtilisateur from "./routes/routeUtilisateur.js";
 import routerHoraire from "./routes/routeHoraire.js";
 import routerRendezVous from "./routes/routeRendezVous.js";
