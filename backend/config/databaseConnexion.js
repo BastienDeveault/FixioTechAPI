@@ -1,35 +1,43 @@
-import mysql from "mysql2/promise";
-import { Buffer } from "node:buffer";
+import pkg from "pg";
+import dotenv from "dotenv";
 
-const isProd = process.env.NODE_ENV === "production";
+dotenv.config();
 
-// Décode le CA si fourni (sinon undefined)
-const mysqlCa = process.env.MYSQL_CA_B64
-  ? Buffer.from(process.env.MYSQL_CA_B64, "base64").toString("ascii")
-  : undefined;
+const { Pool } = pkg;
 
-export const db = mysql.createPool({
-  host: process.env.DB_HOST,
-  port: Number(process.env.DB_PORT ?? 3306),
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME,
+// Render fournit DATABASE_URL directement
+const connectionString = process.env.DATABASE_URL;
 
-  // Aiven exige TLS en prod ; on passe explicitement le CA
-  ssl: isProd
-    ? {
-        ca: mysqlCa,
-        rejectUnauthorized: true,
-        minVersion: "TLSv1.2",
-      }
-    : undefined,
-
-  waitForConnections: true,
-  connectionLimit: 10,
-  queueLimit: 0,
+const pool = new Pool({
+  connectionString,
+  ssl: {
+    rejectUnauthorized: false, // obligatoire pour Render
+  },
 });
 
+// On crée un wrapper pour garder db.query(sql, params, callback)
+// compatible avec tes contrôleurs actuels
+export const db = {
+  query(text, params, callback) {
+    if (typeof params === "function") {
+      callback = params;
+      params = [];
+    }
+
+    pool
+      .query(text, params)
+      .then((res) => callback(null, res))
+      .catch((err) => callback(err));
+  },
+};
+
+// Test de connexion
 export async function assertDb() {
-  const [rows] = await db.query("SELECT 1");
-  return rows;
+  try {
+    const res = await pool.query("SELECT 1 AS ok");
+    return res.rows[0].ok === 1;
+  } catch (error) {
+    console.error(error);
+    return false;
+  }
 }
