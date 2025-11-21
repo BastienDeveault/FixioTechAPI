@@ -46,6 +46,22 @@ app.use("/api/utilisateurs", routerUtilisateur);
 app.use("/api/horaires", routerHoraire);
 app.use("/api/rendezVous", routerRendezVous);
 
+app.get("/test-db", async (_req, res) => {
+  try {
+    const result = await new Promise((resolve, reject) => {
+      db.query("SELECT NOW()", (err, r) => {
+        if (err) reject(err);
+        else resolve(r);
+      });
+    });
+
+    const now = result.rows[0].now;
+    res.status(200).send(`Database OK — NOW() = ${now}`);
+  } catch (error) {
+    res.status(500).send(`Database ERROR — ${error.message}`);
+  }
+});
+
 app.use(errorHandler);
 
 // ---- Lancement ----
