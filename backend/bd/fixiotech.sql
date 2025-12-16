@@ -36,6 +36,8 @@ CREATE TABLE horaires (
     samedi_debut TIME NULL,    samedi_fin TIME NULL,
     dimanche_debut TIME NULL,  dimanche_fin TIME NULL,
 
+    services_proposes JSONB NOT NULL DEFAULT '[]'::jsonb,
+
     CONSTRAINT fk_horaires_employe
         FOREIGN KEY (employe_id)
         REFERENCES utilisateurs(id)

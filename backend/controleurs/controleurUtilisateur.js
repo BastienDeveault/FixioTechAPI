@@ -1,4 +1,19 @@
 import { db } from "../config/databaseConnexion.js";
+import { colonnesJour, baseDisponibiliteQuery } from "./utils.js";
+import { validationResult } from "express-validator";
+
+// Helper pour vérifier les erreurs de validation
+const checkValidationErrors = (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    res.status(400).json({ 
+      message: errors.array()[0].msg,
+      errors: errors.array() 
+    });
+    return true;
+  }
+  return false;
+};
 
 const getUtilisateurs = (req, res, next) => {
   const { role } = req.query; // ex: employe, client, admin
@@ -36,6 +51,9 @@ const getUtilisateurById = async (req, res, next) => {
 };
 
 const addUtilisateur = async (req, res, next) => {
+  // Vérification des erreurs de validation
+  if (checkValidationErrors(req, res)) return;
+
   const { email, mot_de_passe, nom_complet, role = "client" } = req.body;
 
   if (!email || !mot_de_passe || !nom_complet) {
@@ -58,6 +76,9 @@ const addUtilisateur = async (req, res, next) => {
 };
 
 const updateUtilisateur = async (req, res, next) => {
+  // Vérification des erreurs de validation
+  if (checkValidationErrors(req, res)) return;
+
   const { id } = req.params;
   const { email, mot_de_passe, nom_complet, role } = req.body;
 
@@ -149,32 +170,13 @@ const loginUtilisateur = async (req, res, next) => {
           .status(401)
           .json({ message: "Email ou mot de passe incorrect" });
       }
-      res.status(200).json({
-        message: "Connexion réussie",
-        utilisateur: rows[0],
-      });
+      res.status(200).json(rows[0]);
     }
   );
 };
 
-function colonnesJour(dateISO) {
-  // 0=dimanche .. 6=samedi
-  const j = new Date(`${dateISO}T00:00:00`).getDay();
-  const noms = [
-    "dimanche",
-    "lundi",
-    "mardi",
-    "mercredi",
-    "jeudi",
-    "vendredi",
-    "samedi",
-  ];
-  const jour = noms[j];
-  return { debutCol: `${jour}_debut`, finCol: `${jour}_fin` };
-}
-
 const getEmployesDisponibles = (req, res, next) => {
-  const { date, heure } = req.query; // ex: 2025-10-31, 14:00
+  const { date, heure, service } = req.query; // ex: 2025-10-31, 14:00, "Réparation d'ordinateurs"
   if (!date || !heure) {
     return res.status(400).json({
       message: "Paramètres 'date' et 'heure' requis (YYYY-MM-DD, HH:mm)",
@@ -183,21 +185,18 @@ const getEmployesDisponibles = (req, res, next) => {
 
   const { debutCol, finCol } = colonnesJour(date);
 
-  const sql = `
-    SELECT u.id, u.email, u.nom_complet, u.role
-    FROM utilisateurs u
-    JOIN horaires h ON h.employe_id = u.id
-    LEFT JOIN rendez_vous r
-      ON r.employe_id = u.id AND r.date_rdv = $1 AND r.heure_rdv = $2
-    WHERE u.role = 'employe'
-      AND h.${debutCol} IS NOT NULL
-      AND h.${finCol}   IS NOT NULL
-      AND h.${debutCol} <= $3
-      AND $4 < h.${finCol}
-      AND r.id IS NULL
-    ORDER BY u.nom_complet ASC
-  `;
-  const params = [date, heure, heure, heure];
+  // Si un service est spécifié, on filtre aussi par services_proposes
+  let serviceFilter = "";
+  let params = [date, heure, heure, heure];
+
+  if (service) {
+    serviceFilter = " AND h.services_proposes ? $5";
+    params.push(service);
+  }
+
+  // Requêtes communes, avec SELECT complet (id + email + nom + role)
+  const sql =
+    baseDisponibiliteQuery(debutCol, finCol) + serviceFilter + " ORDER BY u.nom_complet ASC";
 
   db.query(sql, params, (err, results) => {
     if (err) return next(err);
@@ -205,12 +204,30 @@ const getEmployesDisponibles = (req, res, next) => {
   });
 };
 
+const getEmployesParService = (req, res, next) => {
+  const { service } = req.query;
+
+  if (!service) {
+    return res.status(400).json({
+      message: "Paramètre 'service' requis",
+    });
+  }
+
+  const sql = `
+    SELECT u.id, u.email, u.nom_complet, u.role
+    FROM utilisateurs u
+    JOIN horaires h ON h.employe_id = u.id
+    WHERE u.role = 'employe'
+      AND h.services_proposes ? $1
+    ORDER BY u.nom_complet ASC
+  `;
+
+  db.query(sql, [service], (err, results) => {
+    if (err) return next(err);
+    res.json(results.rows);
+  });
+};
+
 export {
-  getUtilisateurs,
-  getUtilisateurById,
-  addUtilisateur,
-  updateUtilisateur,
-  deleteUtilisateur,
-  loginUtilisateur,
-  getEmployesDisponibles,
+  getUtilisateurs, getUtilisateurById, addUtilisateur, updateUtilisateur, deleteUtilisateur, loginUtilisateur, getEmployesDisponibles, getEmployesParService,
 };

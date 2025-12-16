@@ -1,14 +1,5 @@
 import express from "express";
-
-import {
-  getHoraires,
-  getHoraireById,
-  addHoraire,
-  updateHoraire,
-  deleteHoraire,
-  getHoraireByEmployeId,
-} from "../controleurs/controleurHoraire.js";
-
+import * as horaireController from "../controleurs/controleurHoraire.js";
 import {
   addHoraireValidation,
   updateHoraireValidation,
@@ -16,11 +7,11 @@ import {
 
 const routerHoraire = express.Router();
 
-routerHoraire.get("/", getHoraires);
-routerHoraire.get("/:id", getHoraireById);
-routerHoraire.get("/employe/:employeId", getHoraireByEmployeId);
-routerHoraire.post("/", addHoraireValidation, addHoraire);
-routerHoraire.put("/:id", updateHoraireValidation, updateHoraire);
-routerHoraire.delete("/:id", deleteHoraire);
+routerHoraire.get("/", horaireController.getHoraires);
+routerHoraire.get("/:id", horaireController.getHoraireById);
+routerHoraire.get("/employe/:employeId", horaireController.getHoraireByEmployeId);
+routerHoraire.post("/", addHoraireValidation, horaireController.addHoraire);
+routerHoraire.put("/:id", updateHoraireValidation, horaireController.updateHoraire);
+routerHoraire.delete("/:id", horaireController.deleteHoraire);
 
 export default routerHoraire;
