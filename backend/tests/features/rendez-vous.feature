@@ -10,13 +10,13 @@ Fonctionnalité: Prise de rendez-vous
     Et que le client est connecté
 
   Scénario: Création d'un rendez-vous avec succès
-    Quand je crée un rendez-vous pour le "2025-12-15" à "10:00:00"
+    Quand je crée un rendez-vous pour le "2025-12-19" à "10:00:00"
     Et je spécifie le service "Support Technique"
     Et je sélectionne l'employé "tech@test.com"
     Alors je devrais recevoir un code de statut 201
     Et la réponse devrait contenir un "id" de rendez-vous
     Et le statut du rendez-vous devrait être "Programmé"
-    Et la date devrait être "2025-12-15"
+    Et la date devrait être "2025-12-19"
 
   Scénario: Rendez-vous refusé avec une date passée
     Quand je tente de créer un rendez-vous pour le "2020-01-01"

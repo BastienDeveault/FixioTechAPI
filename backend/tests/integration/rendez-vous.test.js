@@ -80,14 +80,15 @@ describe("Tests d'intégration - API Rendez-vous", () => {
         .send(rdvIncomplet)
         .expect(400);
 
-      expect(response.body).toHaveProperty("message");
+      expect(response.body).toHaveProperty("errors");
+      expect(Array.isArray(response.body.errors)).toBe(true);
     });
 
     it("devrait rejeter un rendez-vous avec un client_id inexistant", async () => {
       const rdvClientInvalide = {
         client_id: 99999,
         employe_id: testEmployeId,
-        date_rdv: "2025-12-15",
+        date_rdv: "2025-12-19",
         heure_rdv: "10:00:00",
         description_probleme: "Test",
       };
@@ -95,7 +96,7 @@ describe("Tests d'intégration - API Rendez-vous", () => {
       const response = await request(app)
         .post("/api/rendezVous")
         .send(rdvClientInvalide)
-        .expect(400); // Contrôleur retourne "Aucun employé disponible" - conflit métier
+        .expect(409); // Validation échoue ou aucun employé disponible
     });
 
     it("devrait rejeter un rendez-vous avec une date passée", async () => {

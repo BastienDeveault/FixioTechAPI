@@ -1,28 +1,48 @@
 import { db } from "../config/databaseConnexion.js";
 import { colonnesJour, baseDisponibiliteQuery } from "./utils.js";
+import { validationResult } from "express-validator";
 
 function emptyToNull(value) {
   return value === undefined || value === null || value === "" ? null : value;
 }
 
+function checkValidationErrors(req, res) {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    res.status(400).json({ errors: errors.array() });
+    return true;
+  }
+  return false;
+}
+
 const getRendezVous = (req, res, next) => {
   const { client_id, employe_id } = req.query;
 
-  let sql = "SELECT * FROM rendez_vous";
+  let sql = `
+    SELECT 
+      rdv.*,
+      uc.nom_complet AS client_nom,
+      uc.email AS client_email,
+      ue.nom_complet AS employe_nom,
+      ue.email AS employe_email
+    FROM rendez_vous rdv
+    LEFT JOIN utilisateurs uc ON rdv.client_id = uc.id
+    LEFT JOIN utilisateurs ue ON rdv.employe_id = ue.id
+  `;
   const params = [];
   let paramIndex = 1;
 
   if (client_id) {
-    sql += ` WHERE client_id = $${paramIndex}`;
+    sql += ` WHERE rdv.client_id = $${paramIndex}`;
     params.push(client_id);
     paramIndex++;
   } else if (employe_id) {
-    sql += ` WHERE employe_id = $${paramIndex}`;
+    sql += ` WHERE rdv.employe_id = $${paramIndex}`;
     params.push(employe_id);
     paramIndex++;
   }
 
-  sql += " ORDER BY date_rdv ASC, heure_rdv ASC";
+  sql += " ORDER BY rdv.date_rdv ASC, rdv.heure_rdv ASC";
 
   db.query(sql, params, (err, results) => {
     if (err) return next(err);
@@ -48,7 +68,11 @@ const getRendezVousById = async (req, res, next) => {
 };
 
 const addRendezVous = (req, res, next) => {
+  // Vérifier les erreurs de validation
+  if (checkValidationErrors(req, res)) return;
+
   const { client_id, employe_id, date_rdv, heure_rdv } = req.body;
+  const service = emptyToNull(req.body.service);
   const description_probleme = emptyToNull(req.body.description_probleme);
 
   if (!client_id || !date_rdv || !heure_rdv) {
@@ -94,8 +118,8 @@ const addRendezVous = (req, res, next) => {
 
     const insertSql = `
       INSERT INTO rendez_vous
-      (client_id, employe_id, date_rdv, heure_rdv, description_probleme)
-      VALUES ($1, $2, $3, $4, $5)
+      (client_id, employe_id, date_rdv, heure_rdv, service, description_probleme)
+      VALUES ($1, $2, $3, $4, $5, $6)
       RETURNING *
     `;
     const insertParams = [
@@ -103,6 +127,7 @@ const addRendezVous = (req, res, next) => {
       chosenEmployeId,
       date_rdv,
       heure_rdv,
+      service,
       description_probleme,
     ];
 
@@ -114,6 +139,9 @@ const addRendezVous = (req, res, next) => {
 };
 
 const updateRendezVous = async (req, res, next) => {
+  // Vérifier les erreurs de validation
+  if (checkValidationErrors(req, res)) return;
+
   const { id } = req.params;
 
   const {
@@ -193,10 +221,17 @@ const getRendezVousByEmployeId = async (req, res, next) => {
   const { employe_id } = req.params;
 
   db.query(
-    `SELECT *
-     FROM rendez_vous
-     WHERE employe_id = $1
-     ORDER BY date_rdv ASC, heure_rdv ASC`,
+    `SELECT 
+      rdv.*,
+      uc.nom_complet AS client_nom,
+      uc.email AS client_email,
+      ue.nom_complet AS employe_nom,
+      ue.email AS employe_email
+     FROM rendez_vous rdv
+     LEFT JOIN utilisateurs uc ON rdv.client_id = uc.id
+     LEFT JOIN utilisateurs ue ON rdv.employe_id = ue.id
+     WHERE rdv.employe_id = $1
+     ORDER BY rdv.date_rdv ASC, rdv.heure_rdv ASC`,
     [employe_id],
     (err, results) => {
       if (err) return next(err);
@@ -209,10 +244,17 @@ const getRendezVousByClientId = async (req, res, next) => {
   const { client_id } = req.params;
 
   db.query(
-    `SELECT *
-     FROM rendez_vous
-     WHERE client_id = $1
-     ORDER BY date_rdv ASC, heure_rdv ASC`,
+    `SELECT 
+      rdv.*,
+      uc.nom_complet AS client_nom,
+      uc.email AS client_email,
+      ue.nom_complet AS employe_nom,
+      ue.email AS employe_email
+     FROM rendez_vous rdv
+     LEFT JOIN utilisateurs uc ON rdv.client_id = uc.id
+     LEFT JOIN utilisateurs ue ON rdv.employe_id = ue.id
+     WHERE rdv.client_id = $1
+     ORDER BY rdv.date_rdv ASC, rdv.heure_rdv ASC`,
     [client_id],
     (err, results) => {
       if (err) return next(err);

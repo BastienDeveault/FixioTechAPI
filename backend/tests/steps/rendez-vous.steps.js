@@ -86,7 +86,7 @@ Given('que le client est connecté', function() {
 Given('j\'ai un rendez-vous programmé', async function() {
   const result = await db.queryPromise(
     'INSERT INTO rendez_vous (client_id, employe_id, date_rdv, heure_rdv, description_probleme) VALUES ($1, $2, $3, $4, $5) RETURNING id',
-    [testClientId, testEmployeId, '2025-12-15', '10:00:00', 'Test rendez-vous']
+    [testClientId, testEmployeId, '2025-12-19', '10:00:00', 'Test rendez-vous']
   );
   testRendezVousId = result.rows[0].id;
   testIds.push({ type: 'rendez_vous', id: testRendezVousId });
@@ -95,7 +95,7 @@ Given('j\'ai un rendez-vous programmé', async function() {
 Given('que j\'ai un rendez-vous programmé', async function() {
   const result = await db.queryPromise(
     'INSERT INTO rendez_vous (client_id, employe_id, date_rdv, heure_rdv, description_probleme) VALUES ($1, $2, $3, $4, $5) RETURNING id',
-    [testClientId, testEmployeId, '2025-12-15', '10:00:00', 'Test rendez-vous']
+    [testClientId, testEmployeId, '2025-12-19', '10:00:00', 'Test rendez-vous']
   );
   testRendezVousId = result.rows[0].id;
   testIds.push({ type: 'rendez_vous', id: testRendezVousId });

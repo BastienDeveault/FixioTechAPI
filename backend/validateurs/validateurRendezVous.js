@@ -18,7 +18,11 @@ function makeRendezVousValidation({ partial = false } = {}) {
       .matches(timeRe)
       .withMessage("Heure de rendez-vous invalide"),
 
-    // Dans les deux cas, la description reste optionnelle
+    // Champs optionnels
+    body("service")
+      .optional()
+      .isString()
+      .withMessage("Service invalide"),
     body("description_probleme")
       .optional()
       .isString()

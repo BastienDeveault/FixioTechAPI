@@ -55,6 +55,7 @@ CREATE TABLE rendez_vous (
     employe_id INT NOT NULL,
     date_rdv   DATE NOT NULL,
     heure_rdv  TIME NOT NULL,
+    service VARCHAR(100) NULL,
     description_probleme TEXT NULL,
     statut VARCHAR(10) NOT NULL
         CHECK (statut IN ('Programmé','Annulé','Terminé'))
